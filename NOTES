@@ -1,6 +1,26 @@
-x_train contains 7352 Observations
-y_train contains 7352 Observations of Activity Labels (1-6)
-subject_train 1-30 of 7352 Observations
+
+features -- 561 features
+
+
+x_train contains 7352 Observations  (561 columns)		ties to the features
+y_train contains 7352 Observations of Activity Labels (1-6)	ties to the activity_labels by ID
+subject_train 1-30 of 7352 Observations				Ties to the subject who carried out the experiment
 
 table layout
-subject_id	y_train(activity_id)	readings (1...) Needing more labels
+subject_id	y_train(activity_id)	readings (1...) Needing more labels(Featurs)
+
+
+
+Both test/train -- Inertial Signals/		--Still not sure if these files will be used or if they are also contained in the X_Train file.
+File Name		ColCount
+body_acc_x		128
+         y		128
+         z		128
+
+body_gyro_x		128
+	 _y		128
+	 _z		128
+
+total_acc_x		128
+	 _y		128
+	 _z		128
