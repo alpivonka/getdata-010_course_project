@@ -1,0 +1,6 @@
+x_train contains 7352 Observations
+y_train contains 7352 Observations of Activity Labels (1-6)
+subject_train 1-30 of 7352 Observations
+
+table layout
+subject_id	y_train(activity_id)	readings (1...) Needing more labels
