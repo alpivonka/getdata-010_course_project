@@ -18,10 +18,11 @@ main<-function(){
   subjects<-joinTest2TrainSubjects(testSubjectsLoc,trainSubjectsLoc)
   observations<-join_X_test2Train(x_trainLoc,x_testLoc,featuresLoc)
   allData<-cbind(subjects,activities,observations)
-  print(sample_n(allData,2))
-  #-mean()-
-  #-std()-
+  View(sample_n(allData,10))
+  
+  
 }
+
 
 
 join_X_test2Train<-function(x_trainLoc,x_testLoc,featuresLoc){
@@ -30,14 +31,15 @@ join_X_test2Train<-function(x_trainLoc,x_testLoc,featuresLoc){
   test<-read.table(x_testLoc,header = F,strip.white = T)
   #print(nrow(test))
   observations<-rbind(test,train)
-  print(nrow(observations))
+  #print(nrow(observations))
   features<-read.table(featuresLoc,header = F,strip.white = T)
   names(features)<-c("id","headings")
   theHeadings<-as.character(features$headings)
   names(observations)<-theHeadings
   #print(sample_n(observations,2))
-  observations
-  
+  yy<-grep("\\-mean\\(\\)|std\\(\\)",theHeadings,value = T)
+  #print(yy)
+  observations<-observations[,yy]
 }
 
 joinTest2TrainSubjects<-function(testSubjectsLoc,trainSubjectsLoc){
