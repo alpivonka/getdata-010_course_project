@@ -1,5 +1,7 @@
 library(plyr)
 library(dplyr)
+library(tidyr)
+library(utils)
 
 main<-function(){
   x_trainLoc<-"Dataset/train/X_train.txt"
@@ -9,7 +11,7 @@ main<-function(){
   x_testLoc<-"Dataset/test/X_test.txt"
   y_testLoc<-"Dataset/test/y_test.txt"
   testSubjectsLoc<-"Dataset/test/subject_test.txt"
-  
+   
   featuresLoc<-"Dataset/features.txt"
   activity_labelsLoc<-"Dataset/activity_labels.txt"
   
@@ -18,13 +20,33 @@ main<-function(){
   subjects<-joinTest2TrainSubjects(testSubjectsLoc,trainSubjectsLoc)
   observations<-join_X_test2Train(x_trainLoc,x_testLoc,featuresLoc)
   allData<-cbind(subjects,activities,observations)
-  View(sample_n(allData,10))
   
+  allData<-cleanup_columnNames(allData)
   
+  xx<-sample_n(allData,10)
+
+  write.csv(xx,file="testing.csv")
+  View(xx)
+  
+  aa<-subset(allData,select=tBodyAcc_Mean_X:fBodyGyroJerkMag_Std)
+  #tidy = aggregate(aa, by=list(activity = allData$activity,subject=allData$subject), mean,na.rm=TRUE)
+  tidy = aggregate(aa, by=list(activity = allData$activity), mean,na.rm=TRUE)
+  View(tidy)
 }
 
+# Clean up the headers 
+cleanup_columnNames<-function(allData){
+  names <- names(allData) 
+  names <- gsub('mean', 'Mean', names) # Replace mean with Mean
+  names <- gsub('std', 'Std', names) # Replace std with Std
+  names <- gsub('[()]', '', names) # Remove the parenthesis
+  names <- gsub('[-]', '_', names) # Remove the dashes
+  names <- gsub('BodyBody', 'Body', names) # Replace `BodyBody' by `Body'
+  names(allData)<-names
+  allData
+}
 
-
+#Combine the x_train and x_test data and apply the headers
 join_X_test2Train<-function(x_trainLoc,x_testLoc,featuresLoc){
   train<-read.table(x_trainLoc,header = F,strip.white = T)
   #print(nrow(train))
@@ -42,6 +64,7 @@ join_X_test2Train<-function(x_trainLoc,x_testLoc,featuresLoc){
   observations<-observations[,yy]
 }
 
+#Combine the y_train and y_test subjects together
 joinTest2TrainSubjects<-function(testSubjectsLoc,trainSubjectsLoc){
   train<-read.table(trainSubjectsLoc,header = F,strip.white = T)
   #print(nrow(train))
@@ -53,6 +76,7 @@ joinTest2TrainSubjects<-function(testSubjectsLoc,trainSubjectsLoc){
   subjects
 }
 
+# Load and join the Y test and train together
 join_Y_test2train_labels<-function(yTrainLoc,yTestLoc,activitiesLoc){
   #Load the two y files
   y_train<-read.table(yTrainLoc,header = F,strip.white = T)
